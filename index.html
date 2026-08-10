@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>تقرير تعبئة SF6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1519;
+  --ink-2:#3C4A52;
+  --ink-3:#78878F;
+  --line:#D9E0E2;
+  --bg:#EDF0F0;
+  --card:#FFFFFF;
+  --steel:#1F6F78;      /* action / selected */
+  --steel-soft:#E3F1F2;
+  --ph-r:#C9302C;
+  --ph-y:#E0A800;
+  --ph-b:#1B57C4;
+  --warn:#A85B00;
+  --warn-soft:#FDF1E0;
+  --ok:#1B7A44;
+  --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  font-size:16px;line-height:1.5;
+  padding-bottom:96px;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:40;
+  background:var(--ink);color:#fff;
+  padding:10px 14px 12px;
+  box-shadow:0 2px 10px rgba(14,21,25,.18);
+}
+.h-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.h-title{font-size:14px;font-weight:600;letter-spacing:.2px}
+.h-date{font-size:12px;color:#9FB0B6}
+.tag{
+  margin-top:8px;display:flex;align-items:center;gap:8px;
+  background:#1B252B;border:1px solid #2C3A42;border-radius:8px;
+  padding:8px 10px;min-height:44px;
+}
+.tag-id{
+  direction:ltr;text-align:left;flex:1;font-size:13.5px;font-weight:500;
+  color:#DDE7EA;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.tag-id .dim{color:#5E7078}
+.phase-strip{display:flex;gap:3px;flex:0 0 auto}
+.phase-strip i{width:9px;height:22px;border-radius:2px;background:#2C3A42;display:block}
+.phase-strip i.on-r{background:var(--ph-r)}
+.phase-strip i.on-y{background:var(--ph-y)}
+.phase-strip i.on-b{background:var(--ph-b)}
+
+/* ---------- layout ---------- */
+main{max-width:640px;margin:0 auto;padding:14px 12px 0}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 13px 15px;margin-bottom:11px;
+}
+.card.miss{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn-soft)}
+.lab{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.lab h2{margin:0;font-size:14.5px;font-weight:600}
+.lab .en{font-size:11px;color:var(--ink-3);font-weight:500;letter-spacing:.4px}
+.req{color:var(--warn);font-size:12px;margin-inline-start:auto}
+.hint{font-size:12px;color:var(--ink-3);margin:-4px 0 9px}
+
+/* ---------- chips ---------- */
+/* compt groups */
+.cgroup{margin-top:15px;padding-top:12px;border-top:1px solid #EDF1F1}
+.cgroup:first-child{margin-top:0;padding-top:0;border-top:none}
+.glabel{font-size:12px;font-weight:600;color:var(--ink-3);margin-bottom:8px}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cgrid .chip{padding:0 8px;min-height:54px;font-size:13.5px;line-height:1.25;white-space:normal;text-align:center}
+.cgrid .chip.full{grid-column:1 / -1}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  font:inherit;font-size:14px;font-weight:500;
+  background:#F4F7F7;border:1.5px solid var(--line);color:var(--ink-2);
+  border-radius:8px;padding:0 13px;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;transition:background .12s,border-color .12s,color .12s;
+}
+.chip:hover{border-color:#B9C6C9}
+.chip[aria-pressed="true"]{background:var(--steel);border-color:var(--steel);color:#fff}
+.chip.wide{flex:1 1 44%}
+.chip .sub{font-size:11px;opacity:.7}
+.chip:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #7FC4CB;outline-offset:2px}
+
+/* bay number grid */
+.bays{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.bays .chip{padding:0;min-height:42px;font-size:15px;font-family:"IBM Plex Mono",monospace}
+@media(max-width:400px){.bays{grid-template-columns:repeat(6,1fr)}}
+
+/* phase buttons */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.ph{
+  border:1.5px solid var(--line);background:#F4F7F7;border-radius:8px;
+  min-height:62px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+}
+.ph b{width:26px;height:8px;border-radius:2px;display:block}
+.ph[data-p="R"] b{background:var(--ph-r)}
+.ph[data-p="Y"] b{background:var(--ph-y)}
+.ph[data-p="B"] b{background:var(--ph-b)}
+.ph[data-p="ALL"] b{background:linear-gradient(90deg,var(--ph-r) 33%,var(--ph-y) 33% 66%,var(--ph-b) 66%)}
+.ph[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ---------- station button ---------- */
+.picker-btn{
+  width:100%;text-align:start;font:inherit;cursor:pointer;
+  background:#F4F7F7;border:1.5px solid var(--line);border-radius:8px;
+  padding:11px 13px;min-height:54px;display:flex;align-items:center;gap:10px;color:var(--ink-3);
+}
+.picker-btn.filled{background:var(--steel-soft);border-color:var(--steel);color:var(--ink)}
+.picker-btn .val{flex:1;direction:ltr;text-align:left;font-size:16px;font-weight:600;font-family:"IBM Plex Mono",monospace}
+.picker-btn .val.ar{direction:rtl;text-align:right;font-family:inherit}
+.picker-btn .go{font-size:12px;color:var(--steel);font-weight:600}
+
+/* ---------- inputs ---------- */
+.in{
+  width:100%;font:inherit;font-size:17px;border:1.5px solid var(--line);
+  border-radius:8px;padding:11px 12px;min-height:50px;background:#F4F7F7;color:var(--ink);
+}
+.in:focus{background:#fff;border-color:var(--steel)}
+.notice{
+  background:var(--warn-soft);border:1px solid #F0D4A8;border-radius:var(--r);
+  padding:11px 13px;margin-bottom:11px;font-size:13px;line-height:1.6;color:#7A4300;
+}
+.notice b{display:block;font-size:13.5px;margin-bottom:3px;color:#5E3400}
+.in.mono{direction:ltr;text-align:left;text-transform:uppercase;letter-spacing:.5px}
+
+/* date */
+.date-wrap{position:relative}
+.date-native{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;
+  border:none;background:none;cursor:pointer;font-size:16px;
+}
+.date-val{flex:1;display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.date-val .d1{font-size:16px;font-weight:600;color:var(--ink)}
+.date-val .d2{font-size:12px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;direction:ltr}
+
+/* pressure */
+.press{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:9px}
+.press label{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.press .arrow{padding-bottom:14px;color:var(--ink-3);font-size:18px}
+.press input{text-align:center;font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600}
+.delta{
+  margin-top:10px;border-radius:8px;padding:8px 11px;font-size:13px;
+  background:#F4F7F7;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center;
+}
+.delta.bad{background:var(--warn-soft);color:var(--warn);font-weight:600}
+.delta b{font-family:"IBM Plex Mono",monospace;font-size:16px}
+
+/* techs */
+.tech-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.tech-row .num{
+  flex:0 0 30px;height:30px;border-radius:50%;background:#F0F3F3;color:var(--ink-3);
+  font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;
+  font-family:"IBM Plex Mono",monospace;
+}
+.tech-row .picker-btn{min-height:48px;font-size:15px}
+.tech-row .clear{
+  flex:0 0 auto;background:none;border:none;color:var(--ink-3);font-size:20px;
+  cursor:pointer;padding:6px 4px;line-height:1;
+}
+.link-btn{background:none;border:none;color:var(--steel);font:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0}
+
+/* ---------- sheet ---------- */
+.sheet{position:fixed;inset:0;z-index:90;background:var(--bg);display:none;flex-direction:column}
+.sheet.open{display:flex}
+.sheet-top{background:var(--ink);padding:10px 12px;display:flex;gap:9px;align-items:center}
+.sheet-top input{
+  flex:1;font:inherit;font-size:16px;border:none;border-radius:8px;padding:12px 13px;
+  background:#26333A;color:#fff;min-height:48px;
+}
+.sheet-top input::placeholder{color:#7C8F97}
+.sheet-top button{
+  background:#26333A;border:none;color:#fff;font:inherit;font-size:14px;font-weight:600;
+  border-radius:8px;padding:0 15px;min-height:48px;cursor:pointer;
+}
+.az{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;background:#fff;border-bottom:1px solid var(--line);direction:ltr}
+.az button{
+  flex:0 0 auto;min-width:32px;height:32px;border-radius:6px;border:1px solid var(--line);
+  background:#F4F7F7;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  color:var(--ink-2);cursor:pointer;
+}
+.az button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.results{flex:1;overflow-y:auto;padding:8px 10px 40px;-webkit-overflow-scrolling:touch}
+.res-head{font-size:11.5px;color:var(--ink-3);font-weight:600;padding:10px 4px 6px;letter-spacing:.3px}
+.area{background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;overflow:hidden}
+.area>button{
+  width:100%;background:none;border:none;font:inherit;cursor:pointer;padding:13px 13px;
+  display:flex;align-items:center;gap:10px;text-align:start;min-height:54px;
+}
+.area .nm{flex:1;direction:ltr;text-align:left;font-size:15.5px;font-weight:600;font-family:"IBM Plex Mono",monospace}
+.area .ct{font-size:11px;color:var(--ink-3);background:#F0F3F3;border-radius:20px;padding:3px 9px}
+.area.open>button{background:var(--ink);color:#fff}
+.area.open .ct{background:#33434B;color:#C7D4D8}
+.suffixes{display:flex;flex-wrap:wrap;gap:6px;padding:10px 11px 12px;border-top:1px solid var(--line);background:#FAFCFC}
+.suffixes button{
+  font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;
+  background:#fff;border:1.5px solid var(--line);border-radius:7px;
+  min-height:46px;min-width:54px;padding:0 13px;cursor:pointer;color:var(--ink);
+}
+.suffixes button:hover{border-color:var(--steel);background:var(--steel-soft)}
+.flat{background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;width:100%;
+  text-align:start;font:inherit;padding:13px;min-height:54px;cursor:pointer;display:flex;align-items:center}
+.flat .nm{direction:ltr;text-align:left;font-family:"IBM Plex Mono",monospace;font-size:15.5px;font-weight:600}
+.flat:hover{border-color:var(--steel);background:var(--steel-soft)}
+.empty{text-align:center;color:var(--ink-3);font-size:14px;padding:40px 20px}
+.hit{background:#FFF0A8;border-radius:2px}
+.tname{direction:rtl;text-align:right;font-family:inherit;font-size:15px;font-weight:500}
+
+/* ---------- footer ---------- */
+.bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;
+  border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+.bar-in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:11px}
+.count{font-size:12px;color:var(--ink-3);flex:1}
+.count b{color:var(--ink);font-family:"IBM Plex Mono",monospace}
+.save{
+  background:var(--steel);color:#fff;border:none;border-radius:9px;font:inherit;font-size:16px;
+  font-weight:600;padding:0 26px;min-height:52px;cursor:pointer;
+}
+.save[disabled]{background:#C3CDCF;cursor:not-allowed}
+
+/* ---------- review ---------- */
+.rev{position:fixed;inset:0;z-index:95;background:rgba(14,21,25,.55);display:none;align-items:flex-end}
+.rev.open{display:flex}
+.rev-in{background:#fff;width:100%;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px 14px 24px;max-width:640px;margin:0 auto}
+.rev h3{margin:0 0 4px;font-size:17px}
+.rev .sub{font-size:12.5px;color:var(--ink-3);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:9px 4px;border-bottom:1px solid #EEF1F1;vertical-align:top}
+td:first-child{color:var(--ink-3);font-size:12.5px;width:38%}
+td.v{font-weight:600}
+td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
+.rev-btns{display:flex;gap:9px;margin-top:16px}
+.rev-btns button{flex:1;min-height:50px;border-radius:9px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.b-ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink-2)}
+.b-main{background:var(--steel);border:none;color:#fff}
+.toast{
+  position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:11px 18px;border-radius:8px;font-size:14px;z-index:120;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-top">
+    <span class="h-title">تقرير تعبئة غاز SF6</span>
+    <span class="h-date mono" id="hDate"></span>
+  </div>
+  <div class="tag">
+    <div class="tag-id" id="tagId"><span class="dim">اختر المحطة للبدء…</span></div>
+    <div class="phase-strip" id="phStrip"><i></i><i></i><i></i></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="notice">
+    <b>نموذج مقترح للمراجعة</b>
+    هذه نسخة تجريبية لعرض التصميم فقط. البيانات المُدخلة لا تُحفظ ولا تُرسل إلى أي جهة. للتفعيل يلزم ربطها بنموذج الردود الحالي.
+  </div>
+
+  <!-- date -->
+  <section class="card">
+    <div class="lab"><h2>تاريخ التعبئة</h2><span class="en">DATE</span></div>
+    <div class="date-wrap">
+      <button class="picker-btn filled" id="btnDate" type="button">
+        <span class="date-val"><span class="d1" id="dTxt"></span><span class="d2" id="dNum"></span></span>
+        <span class="go">تغيير ›</span>
+      </button>
+      <input class="date-native" type="date" id="fDate">
+    </div>
+  </section>
+
+  <!-- station -->
+  <section class="card" id="c-station">
+    <div class="lab"><h2>المحطة</h2><span class="en">SUBSTATION</span><span class="req">مطلوب</span></div>
+    <button class="picker-btn" id="btnStation" type="button">
+      <span class="val" id="valStation">اضغط للبحث</span><span class="go">بحث ›</span>
+    </button>
+    <div id="recentWrap" style="margin-top:10px;display:none">
+      <div class="hint" style="margin:0 0 6px">آخر المحطات</div>
+      <div class="chips" id="recent"></div>
+    </div>
+  </section>
+
+  <!-- voltage -->
+  <section class="card" id="c-kv">
+    <div class="lab"><h2>مستوى الجهد</h2><span class="en">VOLTAGE</span><span class="req">مطلوب</span></div>
+    <div class="chips" id="kv"></div>
+  </section>
+
+  <!-- unit + bay -->
+  <section class="card" id="c-unit">
+    <div class="lab"><h2>اسم الوحدة</h2><span class="en">UNIT</span><span class="req">مطلوب</span></div>
+    <input class="in mono" id="fUnit" placeholder="مثال: T1" autocomplete="off">
+  </section>
+
+  <section class="card" id="c-bay">
+    <div class="lab"><h2>رقم الخلية</h2><span class="en">BAY NUMBER</span><span class="req">مطلوب</span></div>
+    <div class="bays" id="bays"></div>
+  </section>
+
+  <!-- phase -->
+  <section class="card" id="c-phase">
+    <div class="lab"><h2>الفيز</h2><span class="en">PHASE</span><span class="req">مطلوب</span></div>
+    <div class="phases" id="phases">
+      <button class="ph" type="button" data-p="R" aria-pressed="false"><b></b>RED</button>
+      <button class="ph" type="button" data-p="Y" aria-pressed="false"><b></b>YELLOW</button>
+      <button class="ph" type="button" data-p="B" aria-pressed="false"><b></b>BLUE</button>
+      <button class="ph" type="button" data-p="ALL" aria-pressed="false"><b></b>الكل</button>
+    </div>
+  </section>
+
+  <!-- compt -->
+  <section class="card" id="c-compt">
+    <div class="lab"><h2>المعدة</h2><span class="en">COMPT</span><span class="req">مطلوب</span></div>
+    <div id="compt"></div>
+  </section>
+
+  <!-- reason -->
+  <section class="card" id="c-reason">
+    <div class="lab"><h2>السبب</h2><span class="req">مطلوب</span></div>
+    <div class="chips" id="reason">
+      <button class="chip wide" type="button" data-v="Alarm" aria-pressed="false">إنذار <span class="sub">Alarm</span></button>
+      <button class="chip wide" type="button" data-v="Refill" aria-pressed="false">إعادة تعبئة <span class="sub">Refill</span></button>
+    </div>
+  </section>
+
+  <!-- pressure -->
+  <section class="card" id="c-press">
+    <div class="lab"><h2>الضغط</h2><span class="en">BAR</span><span class="req">مطلوب</span></div>
+    <div class="press">
+      <div><label>قبل التعبئة</label><input class="in" id="pBefore" type="number" inputmode="decimal" step="0.1" placeholder="3.2"></div>
+      <div class="arrow">⇄</div>
+      <div><label>بعد التعبئة</label><input class="in" id="pAfter" type="number" inputmode="decimal" step="0.1" placeholder="6.0"></div>
+    </div>
+    <div class="delta" id="delta" style="display:none"><span id="deltaTxt"></span><b id="deltaVal"></b></div>
+  </section>
+
+  <!-- make -->
+  <section class="card" id="c-make">
+    <div class="lab"><h2>الشركة المصنعة</h2><span class="en">MAKE</span><span class="req">مطلوب</span></div>
+    <div class="chips" id="make"></div>
+  </section>
+
+  <!-- group -->
+  <section class="card" id="c-group">
+    <div class="lab"><h2>المجموعة</h2><span class="en">SF6 GROUP</span><span class="req">مطلوب</span></div>
+    <div class="chips" id="region" style="margin-bottom:9px">
+      <button class="chip wide" type="button" data-v="الشمالية" aria-pressed="false">الشمالية</button>
+      <button class="chip wide" type="button" data-v="الجنوبية" aria-pressed="false">الجنوبية</button>
+    </div>
+    <div class="chips" id="groupLetters"></div>
+  </section>
+
+  <!-- techs -->
+  <section class="card">
+    <div class="lab"><h2>الفنيون</h2><span class="en">TECHNICIANS</span></div>
+    <div id="techs"></div>
+    <button class="link-btn" id="lastCrew" type="button" style="display:none">↺ استخدام نفس فريق آخر تقرير</button>
+  </section>
+
+  <!-- notes -->
+  <section class="card">
+    <div class="lab"><h2>ملاحظات</h2></div>
+    <textarea class="in" id="fNotes" rows="2" placeholder="اختياري"></textarea>
+  </section>
+
+</main>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="count">مكتمل <b id="prog">0/9</b> من الحقول المطلوبة</div>
+    <button class="save" id="btnSave" type="button" disabled>مراجعة</button>
+  </div>
+</div>
+
+<!-- picker sheet -->
+<div class="sheet" id="sheet">
+  <div class="sheet-top">
+    <input id="q" placeholder="اكتب أول حروف الاسم…" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button id="close" type="button">إغلاق</button>
+  </div>
+  <div class="az" id="az"></div>
+  <div class="results" id="results"></div>
+</div>
+
+<!-- review -->
+<div class="rev" id="rev">
+  <div class="rev-in">
+    <h3>مراجعة التقرير</h3>
+    <div class="sub">تأكد من البيانات قبل الحفظ</div>
+    <table id="revTable"></table>
+    <div class="rev-btns">
+      <button class="b-ghost" id="revBack" type="button">تعديل</button>
+      <button class="b-main" id="revSave" type="button">حفظ التقرير</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function kids(x){return Array.prototype.slice.call(x.children);}
+
+/* ═══════════════════════════════════════════════════════════
+   قائمة المحطات — هنا مكان التعديل الوحيد لإضافة أو حذف محطة
+   الصيغة:   اسم المنطقة|حرف;حرف;حرف
+   مثال:     SALMIYA|A;B;C;D
+   • لإضافة خلية جديدة لمنطقة موجودة: زد الحرف بعد فاصلة منقوطة
+   • لإضافة منطقة جديدة: أضف سطر جديد بأي مكان (الترتيب تلقائي)
+   • لحذف محطة: امسح الحرف أو امسح السطر كامل
+   ═══════════════════════════════════════════════════════════ */
+const STATIONS_RAW = `
+ABDALI|A;M;N
+ABDALIYA|M
+ABDULLAH AL SALEM|A
+ABDULLAH ALSALEM|M
+ABU FATIRA|A;B;C;D;E;F;Z
+ABU HALIFA|A;B;C;D
+AHMADI|A;B;C;D;E;M;N;W
+AHMADI REFINERY|A;B;C
+AHMED AL JABER|A
+AIRPORT|A;B;C;D;E;M;N
+AL ADAN HOSPITAL|A
+AL ANDALUS|M
+AL DAJEEJ|A
+AL QURAIN|W
+AL RAI|A;B;C;D;E;F;M
+AL SALAM|A;B;C
+ALSHADADIUH|A
+AMIRI|A
+AMIRI DIWAN|E;M
+AMMONIA|A
+ARDIYA|A;B;C;D;E;G;W
+ARIFJAN|A
+BAYAN|A;M;N;P
+BNED AL GHAR|A;B;C
+BRIGADE 06|A
+BRIGADE 15|A;B
+BRIGADE 35|A
+BURGAN|A;B;C
+CEMENT|A
+CENTRAL PRISON|A;B
+DAHR|A;B
+DAIYA|M
+DASMA|A
+DASMAN|M
+DHAMAN HOSPITAL JAHRA|A
+DOHA|A;B;M;N
+DUBAIYAH|M
+EAST ARDIYA|A
+EAST HAWALLI|A;B
+EAST MAQWA|A
+EDALIYA|A
+EMBASSIES|A;B
+ENTERTAINMENT CITY|M
+EXHIBITION|M
+FAHAD AL AHMED|A;B;C;D
+FAHAHEEL|A;B;C;D;E;F;G
+FAIHA|M
+FAILAKA|M
+FARWANIYAH|A;B;C;D;M;N;P;Q
+FARWANIYAH HOSPITAL|A
+FIFTH RING ROAD|A;M;W;W ext
+FINTAS|A;AE;B;C;D;E;F;M;W ( NEW );W ( OLD );Z ( 400/300 KV )
+FIRDIOUS NEW|M
+FIRDOUS|A
+FIRDOUS NEW|N
+FLOUR MILL|A
+FUNAITEES|A;B;C;D;F;G;H;I;Z
+FUNEITEES|J
+GREEN BELT|A;W
+HADIYA|M
+HAWALLI|A;B;C;D;E;F;G;H;J;M;N
+HILLALLI|M
+HITEEN|A;D
+ISHBILYA|A
+JABER AL AHMED|1X;1Y;2Y;3X;3Y;4X;4Y;5X;5Y;7X;7Y;8Y;10Y;11Y;13Y;14Y;A;AW;AX;B;C;D;E;W;Y
+JABRIYA|A;B;C;D;E;F;M;N;P;Q;W;Z ( 400/300 KV )
+JAHRA|A;AW;B;C;D;M;P;W;X ( 132KV & 11KV );X ( 300KV & Trs. )
+JAHRA WATER TREATMENT|M
+JALEEB|A;B;C;D;E;N
+JALEEB NEW|M
+JEEWAN|A;B;C;M
+JEWAN WTP|M
+JIBLA|A;M
+KABD|M
+KAIFAN|A;B;M;W
+KAZMA|A
+KCFC|A
+KHALDIYA|A;B
+KHIRAN|A;M;Z
+KHIRAN PEARL|A;B;D;E;F
+KHITAN|A;B;C;D;E;F;N;P
+KHITAN NEW|M
+KNPC|A;B;W
+KOCE|A
+LPG PLANT|M
+MAGWA|A
+MAHBOULA|A;B;C;D
+MAIN AIR BASE|A
+MANAGESH|A;B;C;D;E
+MANGAF|A;B;C;D;E
+MASSILLA|A;C;D;E;F;G;H;I;J
+MERGAB|A;C;D;E;F
+MIDDLE AREA|A;B
+MINA ABDULLA REF|A;B
+MINA ABDULLAH|A;B;C;D;E;F;G;N;P;W/C
+MINA ABDULLAH NEW|M
+MINA AL ZOUR|A;B;M;N
+MINA AL ZOUR WATER COMP|A
+MINA AL ZOUR WATER PUMPING|A
+MINISTRIES COMPLEX|M
+MISHRIF|A;M;P;Q
+MUBARIKIYA POL FARM|M
+MUTHANNA COMPLEX|M
+MUTLA|3A;3D1;M
+NAIF GATE|M
+NASEM|A;B
+NAVAL BASE|M
+NORTH FINTAS|A
+NUZHA|M
+OGAILA|A;B;C;D;F
+OL2K|W
+OMERIYA|A;A EXT;W
+OYOON|A;B
+PETROCHEM COMP|A
+PHYSIO THERAPY HOSPITAL|A
+PLAJAT|M
+QADISIYA|A
+QASR|A;B;M ( NEW )
+QURTOBA|A;B;M;N
+RABIYA|A
+RASS|A;B;E;M ( NEW )
+RAWDA|A;M
+RAWDATAIN|A;B;C;D;E;M;W;X
+RAWDATAIN TV|M;N
+RESEARCH INSTITUTE|A
+RETQA|A
+RIQA|A
+RIQA NEW|M
+RIQE|A;B;C;D
+RUMAITHIYA|A;B
+S.A.A.PUMPING|A;B
+SAAD AL ABDULLA|A;B;C;D;E;F;G;H;I;W
+SABAH AL AHMED|1C;1D;1F;1H;1Z;2A;2B;2D;2E;2G;2H;2K;2Z;3F;3G;3I;3J;3Z;4A;4B;4D;4F;4H;4I;4Z
+SABAH AL AHMED SEA CITY|1Z;2Z;4Z;6Z;C;G;I;J
+SABAH AL NASSER|A;B;C;D
+SABAH AL SALEM|A;B;C;D;E;F;G
+SABAH HOSPITAL|A;B;G
+SABAHIYA|A
+SABAHIYA NEW|M
+SABHAN|A;B;C;D;E;N
+SABRIYA|A ( KOC );B
+SALEM AL MUBARAK|M
+SALMIYA|A;B;C;D;E;F;G;H;I;J;M;N;P;Q ( NEW );W;X
+SALT & CHLORINE|A
+SALWA|A;B;C;D;M;N;P;Q
+SAWABER|A;B
+SHAGAYA|A
+SHAGAYA RENEWABLE ENERGY|A
+SHAMIYA|A;M;N
+SHARQ|A;B
+SHIDADIYA|A
+SHUAIBA|A;B;C;W;X
+SHUAIBA IND|A
+SHUAIBA PUMPING|B
+SHUAIBA SMALL IND|M
+SHUAIBA SWITCHING|A
+SHUAIBA TYRE FACTORY|M
+SHUHADA|A;B
+SHUWAIKH|A;C;D;M;W
+SHUWAIKH IND|A;B;M
+SHUWAIKH INDUSTRY|C
+SHUWAIKH PORT|A;B
+SIDDIQUE|A;B;C;D;E;F;W
+SIXTH RING ROAD|A;AW;W
+SOUTH ARDIYA|F;G
+SOUTH DOHA|A;B;C
+SOUTH JAHRA|A;B;C;D;E;F;G;H
+SOUTH SABAH AL SALEM|A;AW;B;C;D;E;H;W
+SOUTH SABAHIYA|A
+SOUTH SABHIYA|B
+SOUTH SHUABIA INDUSTRIAL|B
+SOUTH SURRA|A;B;W
+SUBIYA WDC|A
+SULABIYA WATER TREATMENT|A
+SULAIBIKAT NEW|M
+SULAIBIKHAT|A;B;C;D;E;F;G;H;I
+SULAIBIYA|A;B;C;D;E;M;N;W;Z ( 400/300 KV )
+SULAIBIYA B/C|M
+SULEBIYA PEE3|M
+SURRA|A;M
+TIMA|A;B;C
+TOWN|A;C;D;E;F;W
+TRANSMITTING|M;N
+UM ALHEIMAN|A;B;C
+UM ELAISH|M
+UM QADAIR|A;B ( SUG-B );M;N;P;Q
+UNIVERSITY|A;B;C;D;E;G;H;J;K;M;W
+WAFRA|1A;1B;1C;1F;1G;1H;A Ext.;B;M;N;P;Q;Z
+WATTIYA|A
+WEST ABDULLAH MUBARAK|1A;1B;1C;1D;1E;1F;1Z
+WEST AIR BASE|M
+WEST JALEEB|A;B;C;D;E;F;G;H;W
+WEST MISHREF|A
+YARMOK|A;M
+ZAHARA|A;B;E
+`.trim();
+
+const AREAS = STATIONS_RAW.split("\n").map(l=>{
+  const [name,sfx] = l.split("|");
+  return {name:name.trim(), sfx:(sfx||"").split(";").map(s=>s.trim()).filter(Boolean)};
+}).sort((a,b)=>a.name.localeCompare(b.name));
+
+const FLAT = [];
+AREAS.forEach(a=>a.sfx.forEach(s=>FLAT.push({full:a.name+" -"+s, area:a.name, s})));
+
+const KV = ["400 KV","300 KV","132 KV","33 KV","11 KV","6.6 KV"];
+const MAKE = ["ABB","SIEMENS","AL AHLEIA","Transelektro","HITACHI","TOSHIBA","AlSTOM","Ganz","HYUNDAI","MITSUBISHI"];
+const COMPT = [
+  ["قضبان التوزيع", ["B/B1","B/B2","B/B3","B/B4"]],
+  ["مفاتيح تأريض القضبان", ["B/B1 Earth switch","B/B2 Earth switch","B/B3 Earth switch","B/B4 Earth switch"]],
+  ["العوازل", ["Upper B/B ISOL","Lower B/B ISOL","Right B/B ISOL (Bus- section)","Left B/B ISOL (Bus- section)","Line ISOL"]],
+  ["القواطع", ["C.B","C.B - L.P Side","LOAD BREAKER SWITCH (L.B.S)"]],
+  ["أخرى", ["Line Earth Switch","V.T","Cable Box","TR- BUSHING","lighting Arrester","NEUTRAL","Shunt Reactor","Rupture Disc"]]
+];
+const TECH_GROUPS = {
+  "الشمالية|A": ["عبدالله سلوم العنزي","ناصر مبارك الشهري","نايف حمادي العنزي","عبدالعزيز محمد الفضلي","حميدي عجاج الحربي"],
+  "الشمالية|B": ["ابراهيم رشيد الرشيدي","فايز صنت الخالدي","حسين صقر المطيري","ابراهيم حسن الطيب","مصدق شاه","عبدالرحمن عبدالله سيد"],
+  "الشمالية|C": ["ناشي حمود الرشيدي","عبدالعزيز مثيب العتيبي","فيصل معيض العبدالله","صقر نوران الرشيدي","محمد وليد رمضان","مهدي عبدالعزيز الحداد"],
+  "الشمالية|D": ["سعود خالد العجمي","حمد صقر سعيد شهاب","عبدالوهاب حسن السالم","هاشم فؤاد الشهاب","علي بسام عيسى"],
+  "الشمالية|F": ["ثامر يوسف الشمري","احمد سراح العنزي","حمد جاسم الهاجري","عثمان ابراهيم الرحيلي","احمد مناحي الشمالي"],
+  "الجنوبية|A": ["خالد محمد العازمي","ناصر مفلح العازمي","راكان جابر العجمي","عبدالله ثلاب الهاجري","يعقوب جمال البناي"],
+  "الجنوبية|B": ["احمد غصن العجمي","سعد ناصر العنزي","فيصل عبدالله القلاف","ماجد محمد العتيبي","خالد محسن العجمي"],
+  "الجنوبية|C": ["محمد معلي المطيري","فهد هايف العتيبي","راضي معوض علي","فلاح محيسن المطيري","جاسم محمد الحداد"],
+  "الجنوبية|D": ["احمد حمود المذن","عبدالرحمن محمد العازمي","محمد نمشان العجمي","عبدالعزيز سعود السبيعي","يوسف بردي الديحاني"],
+  "الجنوبية|F": ["يوسف محمد العتيبي","حسين عدنان العلي","علي عبدالواحد محمد","ايمن غباشي","نايف حسين الشمري"]
+};
+const ALL_TECHS = Object.keys(TECH_GROUPS).reduce((a,k)=>a.concat(TECH_GROUPS[k]),[]);
+function crewList(){
+  const k = S.region+"|"+S.group;
+  return TECH_GROUPS[k] || [];
+}
+
+/* ============ الحالة ============ */
+const S = {station:"",kv:"",unit:"",bay:"",phase:"",compt:"",reason:"",before:"",after:"",make:"",region:"",group:"",techs:["","","",""],notes:""};
+let recents = [], lastCrew = null, pickMode = "station", pickSlot = 0, openArea = null, azFilter = "";
+
+const $ = s=>document.querySelector(s);
+const el = (t,c,x)=>{const e=document.createElement(t); if(c)e.className=c; if(x!==undefined)e.textContent=x; return e;};
+
+/* ============ البناء ============ */
+const AR_DAYS=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const AR_MONTHS=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const iso = d => new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+
+function paintDate(){
+  const [y,m,dd] = $("#fDate").value.split("-").map(Number);
+  const d = new Date(y, m-1, dd, 12);
+  $("#dTxt").textContent = AR_DAYS[d.getDay()]+" "+dd+" "+AR_MONTHS[m-1]+" "+y;
+  $("#dNum").textContent = String(dd).padStart(2,"0")+"/"+String(m).padStart(2,"0")+"/"+y;
+  $("#hDate").textContent = String(dd).padStart(2,"0")+"/"+String(m).padStart(2,"0");
+}
+$("#fDate").value = iso(new Date());
+$("#fDate").onchange = paintDate;
+$("#btnDate").onclick = () => { const i=$("#fDate"); if(i.showPicker){try{i.showPicker();}catch(e){i.focus();}} else i.focus(); };
+paintDate();
+
+function chipRow(host, items, key, cb){
+  host.innerHTML="";
+  items.forEach(v=>{
+    const b=el("button","chip",v); b.type="button"; b.setAttribute("aria-pressed","false"); b.dataset.v=v;
+    b.onclick=()=>{ S[key]=(S[key]===v)?"":v; kids(host).forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S[key])); cb&&cb(); render(); };
+    host.appendChild(b);
+  });
+}
+chipRow($("#kv"), KV, "kv");
+chipRow($("#make"), MAKE, "make");
+chipRow($("#groupLetters"), ["A","B","C","D","F"], "group", syncCrew);
+
+// bays
+const bayHost=$("#bays");
+for(let i=1;i<=40;i++){
+  const b=el("button","chip",String(i)); b.type="button"; b.dataset.v=String(i); b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{ S.bay=(S.bay===b.dataset.v)?"":b.dataset.v; kids(bayHost).forEach(c=>c.setAttribute("aria-pressed",c.dataset.v===S.bay)); render(); };
+  bayHost.appendChild(b);
+}
+
+// compt groups
+const comptHost=$("#compt");
+COMPT.forEach(([g,items])=>{
+  const box=el("div","cgroup");
+  box.appendChild(el("div","glabel",g));
+  const grid=el("div","cgrid");
+  items.forEach((v,i)=>{
+    const b=el("button","chip"+((items.length%2===1 && i===items.length-1)?" full":""),v);
+    b.type="button"; b.dataset.v=v; b.setAttribute("aria-pressed","false");
+    b.onclick=()=>{ S.compt=(S.compt===v)?"":v; comptHost.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.v===S.compt)); render(); };
+    grid.appendChild(b);
+  });
+  box.appendChild(grid);
+  comptHost.appendChild(box);
+});
+
+// simple toggle groups
+function toggleGroup(sel,key,cb){
+  const host=$(sel);
+  kids(host).forEach(b=>{
+    b.onclick=()=>{ S[key]=(S[key]===b.dataset.v)?"":b.dataset.v; kids(host).forEach(c=>c.setAttribute("aria-pressed",c.dataset.v===S[key])); cb&&cb(); render(); };
+  });
+}
+toggleGroup("#reason","reason");
+toggleGroup("#region","region",syncCrew);
+
+// keep only technicians that belong to the currently selected group
+function syncCrew(){
+  const pool = crewList();
+  S.techs = S.techs.map(t => pool.indexOf(t)>=0 ? t : "");
+}
+
+// phases
+$("#phases").querySelectorAll(".ph").forEach(b=>{
+  b.onclick=()=>{ S.phase=(S.phase===b.dataset.p)?"":b.dataset.p;
+    $("#phases").querySelectorAll(".ph").forEach(c=>c.setAttribute("aria-pressed",c.dataset.p===S.phase)); render(); };
+});
+
+// technicians
+const techHost=$("#techs");
+["الفني الأول","الفني الثاني","الفني الثالث","الفني الرابع"].forEach((lbl,i)=>{
+  const row=el("div","tech-row");
+  row.appendChild(el("span","num",String(i+1)));
+  const btn=el("button","picker-btn"); btn.type="button";
+  btn.innerHTML='<span class="val ar"></span><span class="go">اختيار ›</span>';
+  btn.onclick=()=>openPicker("tech",i);
+  row.appendChild(btn);
+  const x=el("button","clear","×"); x.type="button"; x.title="مسح";
+  x.onclick=()=>{S.techs[i]="";render();};
+  row.appendChild(x);
+  techHost.appendChild(row);
+});
+
+// inputs
+$("#fUnit").oninput=e=>{S.unit=e.target.value.trim().toUpperCase();render();};
+$("#fNotes").oninput=e=>{S.notes=e.target.value;};
+$("#pBefore").oninput=e=>{S.before=e.target.value;render();};
+$("#pAfter").oninput=e=>{S.after=e.target.value;render();};
+
+/* ============ المنتقي ============ */
+const sheet=$("#sheet"), q=$("#q"), results=$("#results");
+const azHost=$("#az");
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L=>{
+  const b=el("button",null,L); b.type="button"; b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{ azFilter=(azFilter===L)?"":L; q.value=""; openArea=null;
+    kids(azHost).forEach(c=>c.setAttribute("aria-pressed",c.textContent===azFilter)); drawResults(); };
+  azHost.appendChild(b);
+});
+
+function openPicker(mode,slot){
+  pickMode=mode; pickSlot=slot||0; openArea=null; azFilter=""; q.value="";
+  kids(azHost).forEach(c=>c.setAttribute("aria-pressed","false"));
+  azHost.style.display = mode==="station" ? "flex" : "none";
+  q.placeholder = mode==="station" ? "اكتب أول حروف المحطة…" : "اكتب جزء من اسم الفني…";
+  sheet.classList.add("open"); drawResults();
+  setTimeout(()=>q.focus(),60);
+}
+$("#close").onclick=()=>sheet.classList.remove("open");
+q.oninput=()=>{openArea=null;drawResults();};
+$("#btnStation").onclick=()=>openPicker("station");
+
+function mark(text,query){
+  if(!query) return text;
+  const i=text.toUpperCase().indexOf(query.toUpperCase());
+  if(i<0) return text;
+  return text.slice(0,i)+'<span class="hit">'+text.slice(i,i+query.length)+'</span>'+text.slice(i+query.length);
+}
+function matches(name,query){
+  const N=name.toUpperCase();
+  return query.toUpperCase().split(/\s+/).filter(Boolean).every(t=>N.includes(t));
+}
+
+function drawResults(){
+  const query=q.value.trim();
+  results.innerHTML="";
+
+  if(pickMode==="tech"){
+    const pool = crewList();
+    if(!pool.length){results.appendChild(el("div","empty","اختر المجموعة أولاً (شمالية/جنوبية + الحرف)"));return;}
+    const list=pool.filter(n=>!query||n.includes(query));
+    if(!list.length){results.appendChild(el("div","empty","ما في اسم مطابق داخل هالمجموعة"));return;}
+    list.forEach(n=>{
+      const b=el("button","flat"); b.type="button";
+      b.innerHTML='<span class="nm tname">'+n+'</span>';
+      b.onclick=()=>{S.techs[pickSlot]=n;sheet.classList.remove("open");render();};
+      results.appendChild(b);
+    });
+    return;
+  }
+
+  // exact-ish full-name search (e.g. "SALM C")
+  if(query.length>=2){
+    const hits=FLAT.filter(f=>matches(f.full,query)).slice(0,60);
+    const areaHits=AREAS.filter(a=>matches(a.name,query));
+    if(areaHits.length<=3 && hits.length && hits.length<=40){
+      results.appendChild(el("div","res-head","نتائج مطابقة — "+hits.length));
+      hits.forEach(f=>{
+        const b=el("button","flat"); b.type="button";
+        b.innerHTML='<span class="nm">'+mark(f.full,query)+'</span>';
+        b.onclick=()=>pickStation(f.full);
+        results.appendChild(b);
+      });
+      return;
+    }
+  }
+
+  let list=AREAS;
+  if(query) list=list.filter(a=>matches(a.name,query));
+  else if(azFilter) list=list.filter(a=>a.name.startsWith(azFilter));
+
+  if(!list.length){results.appendChild(el("div","empty","ما في محطة بهذا الاسم — جرب حروف أقل"));return;}
+  results.appendChild(el("div","res-head", list.length+" منطقة"));
+
+  list.forEach(a=>{
+    const box=el("div","area"+(openArea===a.name?" open":""));
+    const head=el("button"); head.type="button";
+    head.innerHTML='<span class="nm">'+mark(a.name,query)+'</span><span class="ct">'+a.sfx.length+'</span>';
+    head.onclick=()=>{openArea=(openArea===a.name)?null:a.name;drawResults();
+      if(openArea===a.name){setTimeout(()=>{const o=results.querySelector(".area.open");o&&o.scrollIntoView({block:"nearest"});},10);}};
+    box.appendChild(head);
+    if(openArea===a.name){
+      const sf=el("div","suffixes");
+      a.sfx.forEach(s=>{
+        const b=el("button",null,s); b.type="button";
+        b.onclick=()=>pickStation(a.name+" -"+s);
+        sf.appendChild(b);
+      });
+      box.appendChild(sf);
+    }
+    results.appendChild(box);
+  });
+}
+
+function pickStation(full){
+  S.station=full;
+  recents=[full,...recents.filter(r=>r!==full)].slice(0,5);
+  sheet.classList.remove("open"); render();
+}
+
+/* ============ العرض ============ */
+function render(){
+  // station button
+  const sb=$("#btnStation");
+  $("#valStation").textContent = S.station || "اضغط للبحث";
+  sb.classList.toggle("filled", !!S.station);
+  $("#valStation").classList.toggle("ar", !S.station);
+
+  // recents
+  const rw=$("#recentWrap"), rh=$("#recent");
+  rw.style.display = recents.length?"block":"none";
+  rh.innerHTML="";
+  recents.forEach(r=>{
+    const b=el("button","chip",r); b.type="button"; b.style.fontFamily='"IBM Plex Mono",monospace'; b.style.fontSize="13px";
+    b.setAttribute("aria-pressed", r===S.station);
+    b.onclick=()=>pickStation(r);
+    rh.appendChild(b);
+  });
+
+  // tech buttons
+  const crewReady = crewList().length>0;
+  techHost.querySelectorAll(".picker-btn").forEach((b,i)=>{
+    b.querySelector(".val").textContent = S.techs[i] || (crewReady ? "اختر الفني" : "اختر المجموعة أولاً");
+    b.classList.toggle("filled", !!S.techs[i]);
+  });
+  $("#lastCrew").style.display = (lastCrew && S.techs.every(t=>!t)) ? "block" : "none";
+
+  // pressure delta
+  const bf=parseFloat(S.before), af=parseFloat(S.after), d=$("#delta");
+  if(!isNaN(bf)&&!isNaN(af)){
+    d.style.display="flex";
+    const diff=(af-bf);
+    if(af>bf){ d.className="delta"; $("#deltaTxt").textContent="تعبئة — الفرق المضاف"; $("#deltaVal").textContent="+"+diff.toFixed(1)+" bar"; }
+    else if(af<bf){ d.className="delta"; $("#deltaTxt").textContent="ضغط عالي — تم تنفيس الفرق"; $("#deltaVal").textContent=diff.toFixed(1)+" bar"; }
+    else { d.className="delta bad"; $("#deltaTxt").textContent="القيمة قبل وبعد نفسها — تأكد من القراءة"; $("#deltaVal").textContent="0.0"; }
+  } else d.style.display="none";
+
+  // header tag
+  const parts=[];
+  if(S.station) parts.push(S.station);
+  if(S.kv) parts.push(S.kv.replace(" ",""));
+  if(S.bay) parts.push("BAY "+S.bay.padStart(2,"0"));
+  if(S.compt) parts.push(S.compt);
+  $("#tagId").innerHTML = parts.length ? parts.join(' <span class="dim">/</span> ') : '<span class="dim">اختر المحطة للبدء…</span>';
+  const strip=$("#phStrip").children;
+  const on={R:[1,0,0],Y:[0,1,0],B:[0,0,1],ALL:[1,1,1]}[S.phase]||[0,0,0];
+  ["on-r","on-y","on-b"].forEach((c,i)=>{strip[i].className = on[i]?c:"";});
+
+  // progress
+  const req=[["station","#c-station"],["kv","#c-kv"],["unit","#c-unit"],["bay","#c-bay"],["phase","#c-phase"],
+             ["compt","#c-compt"],["reason","#c-reason"],["make","#c-make"]];
+  let done=0;
+  req.forEach(([k,sel])=>{ if(S[k]) done++; });
+  const pressOK = S.before!=="" && S.after!=="" && parseFloat(S.after)!==parseFloat(S.before);
+  const groupOK = S.region && S.group;
+  if(pressOK) done++; if(groupOK) done++;
+  const total=req.length+2;
+  $("#prog").textContent = done+"/"+total;
+  $("#btnSave").disabled = done<total;
+}
+
+$("#lastCrew").onclick=()=>{ if(lastCrew){S.techs=[...lastCrew];syncCrew();render();} };
+
+/* ============ المراجعة والحفظ ============ */
+function rows(){
+  return [
+    ["التاريخ", $("#dTxt").textContent, false],
+    ["المحطة", S.station, true],
+    ["الجهد", S.kv, true],
+    ["الوحدة", S.unit, true],
+    ["رقم الخلية", S.bay, true],
+    ["الفيز", {R:"RED PHASE",Y:"YELLOW PHASE",B:"BLUE PHASE",ALL:"ALL PHASES"}[S.phase]||"", true],
+    ["المعدة", S.compt, true],
+    ["السبب", {"Alarm":"إنذار","Refill":"إعادة تعبئة"}[S.reason]||S.reason, false],
+    ["الضغط", S.before+" ⇄ "+S.after+" bar", true],
+    ["المصنع", S.make, true],
+    ["المجموعة", "Group "+S.group+" ("+S.region+")", false],
+    ["الفنيون", S.techs.filter(Boolean).join("، ")||"—", false],
+    ["ملاحظات", S.notes||"—", false]
+  ];
+}
+$("#btnSave").onclick=()=>{
+  const t=$("#revTable"); t.innerHTML="";
+  rows().forEach(([k,v,ltr])=>{
+    const tr=el("tr"); tr.appendChild(el("td",null,k));
+    const td=el("td","v"+(ltr?" ltr":""),v); tr.appendChild(td); t.appendChild(tr);
+  });
+  $("#rev").classList.add("open");
+};
+$("#revBack").onclick=()=>$("#rev").classList.remove("open");
+$("#revSave").onclick=()=>{
+  const deployUrl = "https://script.google.com/macros/s/AKfycbyJxUxARnE_0q3E6R_KvRKeltSQH4RDrtB7hf6YVfnuETog789XzbHCh9o--j-TgYME/exec";
+  const payload = {
+    "date": $("#fDate").value,
+    "substation": S.station,
+    "voltage_level": S.kv,
+    "bay_name": S.unit,
+    "bay_number": S.bay,
+    "phase": {R:"RED",Y:"YELLOW",B:"BLUE",ALL:"ALL"}[S.phase]||S.phase,
+    "compartment": S.compt,
+    "alarm_refill": (parseFloat(S.after) < parseFloat(S.before)) ? (S.reason + " (High Pressure)") : S.reason,
+    "pressure_before": S.before,
+    "pressure_after": S.after,
+    "make": S.make,
+    "group": S.region+" "+S.group,
+    "technician": S.techs.filter(Boolean).join(", "),
+    "notes": S.notes
+  };
+  fetch(deployUrl,{method:'POST',body:JSON.stringify(payload)}).then(r=>r.text()).catch(err=>console.log('Error:',err));
+  const txt = rows().map(([k,v])=>k+": "+v).join("\n");
+  navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
+  lastCrew=[...S.techs];
+  $("#rev").classList.remove("open");
+  toast("✅ تم حفظ التقرير وإرساله");
+  ["unit","bay","phase","compt","reason","before","after","notes"].forEach(k=>S[k]="");
+  $("#fUnit").value="";$("#pBefore").value="";$("#pAfter").value="";$("#fNotes").value="";
+  document.querySelectorAll('.chip,.ph').forEach(c=>c.setAttribute("aria-pressed","false"));
+  document.querySelectorAll('#make .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.make));
+  document.querySelectorAll('#kv .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.kv));
+  document.querySelectorAll('#region .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.region));
+  document.querySelectorAll('#groupLetters .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.group));
+  window.scrollTo({top:0,behavior:"smooth"});
+  render();
+};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200);}
+
+render();
+</script>
+</body>
+</html>
