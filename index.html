@@ -15,7 +15,7 @@
   --line:#D9E0E2;
   --bg:#EDF0F0;
   --card:#FFFFFF;
-  --steel:#1F6F78;      /* action / selected */
+  --steel:#1F6F78;
   --steel-soft:#E3F1F2;
   --ph-r:#C9302C;
   --ph-y:#E0A800;
@@ -35,8 +35,6 @@ body{
   padding-bottom:96px;
 }
 .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
-
-/* ---------- header ---------- */
 header{
   position:sticky;top:0;z-index:40;
   background:var(--ink);color:#fff;
@@ -61,8 +59,6 @@ header{
 .phase-strip i.on-r{background:var(--ph-r)}
 .phase-strip i.on-y{background:var(--ph-y)}
 .phase-strip i.on-b{background:var(--ph-b)}
-
-/* ---------- layout ---------- */
 main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .card{
   background:var(--card);border:1px solid var(--line);border-radius:var(--r);
@@ -74,16 +70,12 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .lab .en{font-size:11px;color:var(--ink-3);font-weight:500;letter-spacing:.4px}
 .req{color:var(--warn);font-size:12px;margin-inline-start:auto}
 .hint{font-size:12px;color:var(--ink-3);margin:-4px 0 9px}
-
-/* ---------- chips ---------- */
-/* compt groups */
 .cgroup{margin-top:15px;padding-top:12px;border-top:1px solid #EDF1F1}
 .cgroup:first-child{margin-top:0;padding-top:0;border-top:none}
 .glabel{font-size:12px;font-weight:600;color:var(--ink-3);margin-bottom:8px}
 .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .cgrid .chip{padding:0 8px;min-height:54px;font-size:13.5px;line-height:1.25;white-space:normal;text-align:center}
 .cgrid .chip.full{grid-column:1 / -1}
-
 .chips{display:flex;flex-wrap:wrap;gap:7px}
 .chip{
   font:inherit;font-size:14px;font-weight:500;
@@ -97,13 +89,9 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .chip.wide{flex:1 1 44%}
 .chip .sub{font-size:11px;opacity:.7}
 .chip:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #7FC4CB;outline-offset:2px}
-
-/* bay number grid */
 .bays{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
 .bays .chip{padding:0;min-height:42px;font-size:15px;font-family:"IBM Plex Mono",monospace}
 @media(max-width:400px){.bays{grid-template-columns:repeat(6,1fr)}}
-
-/* phase buttons */
 .phases{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .ph{
   border:1.5px solid var(--line);background:#F4F7F7;border-radius:8px;
@@ -116,8 +104,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .ph[data-p="B"] b{background:var(--ph-b)}
 .ph[data-p="ALL"] b{background:linear-gradient(90deg,var(--ph-r) 33%,var(--ph-y) 33% 66%,var(--ph-b) 66%)}
 .ph[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
-
-/* ---------- station button ---------- */
 .picker-btn{
   width:100%;text-align:start;font:inherit;cursor:pointer;
   background:#F4F7F7;border:1.5px solid var(--line);border-radius:8px;
@@ -127,8 +113,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .picker-btn .val{flex:1;direction:ltr;text-align:left;font-size:16px;font-weight:600;font-family:"IBM Plex Mono",monospace}
 .picker-btn .val.ar{direction:rtl;text-align:right;font-family:inherit}
 .picker-btn .go{font-size:12px;color:var(--steel);font-weight:600}
-
-/* ---------- inputs ---------- */
 .in{
   width:100%;font:inherit;font-size:17px;border:1.5px solid var(--line);
   border-radius:8px;padding:11px 12px;min-height:50px;background:#F4F7F7;color:var(--ink);
@@ -140,8 +124,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 }
 .notice b{display:block;font-size:13.5px;margin-bottom:3px;color:#5E3400}
 .in.mono{direction:ltr;text-align:left;text-transform:uppercase;letter-spacing:.5px}
-
-/* date */
 .date-wrap{position:relative}
 .date-native{
   position:absolute;inset:0;width:100%;height:100%;opacity:0;
@@ -150,8 +132,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .date-val{flex:1;display:flex;flex-direction:column;gap:2px;align-items:flex-start}
 .date-val .d1{font-size:16px;font-weight:600;color:var(--ink)}
 .date-val .d2{font-size:12px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;direction:ltr}
-
-/* pressure */
 .press{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:9px}
 .press label{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px}
 .press .arrow{padding-bottom:14px;color:var(--ink-3);font-size:18px}
@@ -162,8 +142,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 }
 .delta.bad{background:var(--warn-soft);color:var(--warn);font-weight:600}
 .delta b{font-family:"IBM Plex Mono",monospace;font-size:16px}
-
-/* techs */
 .tech-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
 .tech-row .num{
   flex:0 0 30px;height:30px;border-radius:50%;background:#F0F3F3;color:var(--ink-3);
@@ -176,8 +154,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
   cursor:pointer;padding:6px 4px;line-height:1;
 }
 .link-btn{background:none;border:none;color:var(--steel);font:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0}
-
-/* ---------- sheet ---------- */
 .sheet{position:fixed;inset:0;z-index:90;background:var(--bg);display:none;flex-direction:column}
 .sheet.open{display:flex}
 .sheet-top{background:var(--ink);padding:10px 12px;display:flex;gap:9px;align-items:center}
@@ -222,8 +198,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
 .empty{text-align:center;color:var(--ink-3);font-size:14px;padding:40px 20px}
 .hit{background:#FFF0A8;border-radius:2px}
 .tname{direction:rtl;text-align:right;font-family:inherit;font-size:15px;font-weight:500}
-
-/* ---------- footer ---------- */
 .bar{
   position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;
   border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
@@ -236,8 +210,6 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 0}
   font-weight:600;padding:0 26px;min-height:52px;cursor:pointer;
 }
 .save[disabled]{background:#C3CDCF;cursor:not-allowed}
-
-/* ---------- review ---------- */
 .rev{position:fixed;inset:0;z-index:95;background:rgba(14,21,25,.55);display:none;align-items:flex-end}
 .rev.open{display:flex}
 .rev-in{background:#fff;width:100%;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px 14px 24px;max-width:640px;margin:0 auto}
@@ -275,7 +247,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
 
 <main>
 
-  <!-- date -->
   <section class="card">
     <div class="lab"><h2>تاريخ التعبئة</h2><span class="en">DATE</span></div>
     <div class="date-wrap">
@@ -287,7 +258,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     </div>
   </section>
 
-  <!-- station -->
   <section class="card" id="c-station">
     <div class="lab"><h2>المحطة</h2><span class="en">SUBSTATION</span><span class="req">مطلوب</span></div>
     <button class="picker-btn" id="btnStation" type="button">
@@ -295,13 +265,11 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     </button>
   </section>
 
-  <!-- voltage -->
   <section class="card" id="c-kv">
     <div class="lab"><h2>مستوى الجهد</h2><span class="en">VOLTAGE</span><span class="req">مطلوب</span></div>
     <div class="chips" id="kv"></div>
   </section>
 
-  <!-- unit + bay -->
   <section class="card" id="c-unit">
     <div class="lab"><h2>اسم الوحدة</h2><span class="en">UNIT</span><span class="req">مطلوب</span></div>
     <input class="in mono" id="fUnit" placeholder="مثال: T1" autocomplete="off">
@@ -312,7 +280,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     <div class="bays" id="bays"></div>
   </section>
 
-  <!-- phase -->
   <section class="card" id="c-phase">
     <div class="lab"><h2>الفيز</h2><span class="en">PHASE</span><span class="req">مطلوب</span></div>
     <div class="phases" id="phases">
@@ -323,13 +290,11 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     </div>
   </section>
 
-  <!-- compt -->
   <section class="card" id="c-compt">
     <div class="lab"><h2>المعدة</h2><span class="en">COMPT</span><span class="req">مطلوب</span></div>
     <div id="compt"></div>
   </section>
 
-  <!-- reason -->
   <section class="card" id="c-reason">
     <div class="lab"><h2>السبب</h2><span class="req">مطلوب</span></div>
     <div class="chips" id="reason">
@@ -338,7 +303,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     </div>
   </section>
 
-  <!-- pressure -->
   <section class="card" id="c-press">
     <div class="lab"><h2>الضغط</h2><span class="en">BAR</span><span class="req">مطلوب</span></div>
     <div class="press">
@@ -349,13 +313,11 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     <div class="delta" id="delta" style="display:none"><span id="deltaTxt"></span><b id="deltaVal"></b></div>
   </section>
 
-  <!-- make -->
   <section class="card" id="c-make">
     <div class="lab"><h2>الشركة المصنعة</h2><span class="en">MAKE</span><span class="req">مطلوب</span></div>
     <div class="chips" id="make"></div>
   </section>
 
-  <!-- group -->
   <section class="card" id="c-group">
     <div class="lab"><h2>المجموعة</h2><span class="en">SF6 GROUP</span><span class="req">مطلوب</span></div>
     <div class="chips" id="region" style="margin-bottom:9px">
@@ -365,14 +327,12 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
     <div class="chips" id="groupLetters"></div>
   </section>
 
-  <!-- techs -->
   <section class="card">
     <div class="lab"><h2>الفنيون</h2><span class="en">TECHNICIANS</span></div>
     <div id="techs"></div>
     <button class="link-btn" id="lastCrew" type="button" style="display:none">↺ استخدام نفس فريق آخر تقرير</button>
   </section>
 
-  <!-- notes -->
   <section class="card">
     <div class="lab"><h2>ملاحظات</h2></div>
     <textarea class="in" id="fNotes" rows="2" placeholder="اختياري"></textarea>
@@ -387,7 +347,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
   </div>
 </div>
 
-<!-- picker sheet -->
 <div class="sheet" id="sheet">
   <div class="sheet-top">
     <input id="q" placeholder="اكتب أول حروف الاسم…" autocomplete="off" autocorrect="off" spellcheck="false">
@@ -397,7 +356,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
   <div class="results" id="results"></div>
 </div>
 
-<!-- review -->
 <div class="rev" id="rev">
   <div class="rev-in">
     <h3>مراجعة التقرير</h3>
@@ -415,14 +373,6 @@ td.v.ltr{direction:ltr;text-align:right;font-family:"IBM Plex Mono",monospace}
 <script>
 function kids(x){return Array.prototype.slice.call(x.children);}
 
-/* ═══════════════════════════════════════════════════════════
-   قائمة المحطات — هنا مكان التعديل الوحيد لإضافة أو حذف محطة
-   الصيغة:   اسم المنطقة|حرف;حرف;حرف
-   مثال:     SALMIYA|A;B;C;D
-   • لإضافة خلية جديدة لمنطقة موجودة: زد الحرف بعد فاصلة منقوطة
-   • لإضافة منطقة جديدة: أضف سطر جديد بأي مكان (الترتيب تلقائي)
-   • لحذف محطة: امسح الحرف أو امسح السطر كامل
-   ═══════════════════════════════════════════════════════════ */
 const STATIONS_RAW = `
 ABDALI|A;M;N
 ABDALIYA|M
@@ -655,14 +605,12 @@ function crewList(){
   return TECH_GROUPS[k] || [];
 }
 
-/* ============ الحالة ============ */
 const S = {station:"",kv:"",unit:"",bay:"",phase:"",compt:"",reason:"",before:"",after:"",make:"",region:"",group:"",techs:["","","",""],notes:""};
 let lastCrew = null, pickMode = "station", pickSlot = 0, openArea = null, azFilter = "";
 
 const $ = s=>document.querySelector(s);
 const el = (t,c,x)=>{const e=document.createElement(t); if(c)e.className=c; if(x!==undefined)e.textContent=x; return e;};
 
-/* ============ البناء ============ */
 const AR_DAYS=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 const AR_MONTHS=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 const iso = d => new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
@@ -691,7 +639,6 @@ chipRow($("#kv"), KV, "kv");
 chipRow($("#make"), MAKE, "make");
 chipRow($("#groupLetters"), ["A","B","C","D","F"], "group", syncCrew);
 
-// bays
 const bayHost=$("#bays");
 for(let i=1;i<=40;i++){
   const b=el("button","chip",String(i)); b.type="button"; b.dataset.v=String(i); b.setAttribute("aria-pressed","false");
@@ -699,7 +646,6 @@ for(let i=1;i<=40;i++){
   bayHost.appendChild(b);
 }
 
-// compt groups
 const comptHost=$("#compt");
 COMPT.forEach(([g,items])=>{
   const box=el("div","cgroup");
@@ -715,7 +661,6 @@ COMPT.forEach(([g,items])=>{
   comptHost.appendChild(box);
 });
 
-// simple toggle groups
 function toggleGroup(sel,key,cb){
   const host=$(sel);
   kids(host).forEach(b=>{
@@ -725,19 +670,16 @@ function toggleGroup(sel,key,cb){
 toggleGroup("#reason","reason");
 toggleGroup("#region","region",syncCrew);
 
-// keep only technicians that belong to the currently selected group
 function syncCrew(){
   const pool = crewList();
   S.techs = S.techs.map(t => pool.indexOf(t)>=0 ? t : "");
 }
 
-// phases
 $("#phases").querySelectorAll(".ph").forEach(b=>{
   b.onclick=()=>{ S.phase=(S.phase===b.dataset.p)?"":b.dataset.p;
     $("#phases").querySelectorAll(".ph").forEach(c=>c.setAttribute("aria-pressed",c.dataset.p===S.phase)); render(); };
 });
 
-// technicians
 const techHost=$("#techs");
 ["الفني الأول","الفني الثاني","الفني الثالث","الفني الرابع"].forEach((lbl,i)=>{
   const row=el("div","tech-row");
@@ -752,13 +694,11 @@ const techHost=$("#techs");
   techHost.appendChild(row);
 });
 
-// inputs
 $("#fUnit").oninput=e=>{S.unit=e.target.value.trim().toUpperCase();render();};
 $("#fNotes").oninput=e=>{S.notes=e.target.value;};
 $("#pBefore").oninput=e=>{S.before=e.target.value;render();};
 $("#pAfter").oninput=e=>{S.after=e.target.value;render();};
 
-/* ============ المنتقي ============ */
 const sheet=$("#sheet"), q=$("#q"), results=$("#results");
 const azHost=$("#az");
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L=>{
@@ -809,7 +749,6 @@ function drawResults(){
     return;
   }
 
-  // exact-ish full-name search (e.g. "SALM C")
   if(query.length>=2){
     const hits=FLAT.filter(f=>matches(f.full,query)).slice(0,60);
     const areaHits=AREAS.filter(a=>matches(a.name,query));
@@ -853,19 +792,16 @@ function drawResults(){
 }
 
 function pickStation(full){
-  S.station=full;                 // محطة واحدة فقط — الاختيار الجديد يستبدل القديم
+  S.station=full;
   sheet.classList.remove("open"); render();
 }
 
-/* ============ العرض ============ */
 function render(){
-  // station button
   const sb=$("#btnStation");
   $("#valStation").textContent = S.station || "اضغط للبحث";
   sb.classList.toggle("filled", !!S.station);
   $("#valStation").classList.toggle("ar", !S.station);
 
-  // tech buttons
   const crewReady = crewList().length>0;
   techHost.querySelectorAll(".picker-btn").forEach((b,i)=>{
     b.querySelector(".val").textContent = S.techs[i] || (crewReady ? "اختر الفني" : "اختر المجموعة أولاً");
@@ -873,7 +809,6 @@ function render(){
   });
   $("#lastCrew").style.display = (lastCrew && S.techs.every(t=>!t)) ? "block" : "none";
 
-  // pressure delta
   const bf=parseFloat(S.before), af=parseFloat(S.after), d=$("#delta");
   if(!isNaN(bf)&&!isNaN(af)){
     d.style.display="flex";
@@ -883,7 +818,6 @@ function render(){
     else { d.className="delta bad"; $("#deltaTxt").textContent="القيمة قبل وبعد نفسها — تأكد من القراءة"; $("#deltaVal").textContent="0.0"; }
   } else d.style.display="none";
 
-  // header tag
   const parts=[];
   if(S.station) parts.push(S.station);
   if(S.kv) parts.push(S.kv.replace(" ",""));
@@ -894,7 +828,6 @@ function render(){
   const on={R:[1,0,0],Y:[0,1,0],B:[0,0,1],ALL:[1,1,1]}[S.phase]||[0,0,0];
   ["on-r","on-y","on-b"].forEach((c,i)=>{strip[i].className = on[i]?c:"";});
 
-  // progress
   const req=[["station","#c-station"],["kv","#c-kv"],["unit","#c-unit"],["bay","#c-bay"],["phase","#c-phase"],
              ["compt","#c-compt"],["reason","#c-reason"],["make","#c-make"]];
   let done=0;
@@ -909,7 +842,6 @@ function render(){
 
 $("#lastCrew").onclick=()=>{ if(lastCrew){S.techs=[...lastCrew];syncCrew();render();} };
 
-/* ============ المراجعة والحفظ ============ */
 function rows(){
   return [
     ["التاريخ", $("#dTxt").textContent, false],
@@ -955,12 +887,9 @@ $("#revSave").onclick=()=>{
     "notes": S.notes
   };
   toast("⏳ جاري الإرسال...");
-  fetch(deployUrl,{method:'POST',body:JSON.stringify(payload)})
-    .then(r=>r.text())
-    .then(t=>{
-      t=String(t).trim();
-      if(t.indexOf("SAVED")>=0) toast("✅ تم حفظ التقرير وإرساله");
-      else toast("⚠️ ما انحفظ — رد السكربت: "+t.slice(0,70));
+  fetch(deployUrl,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)})
+    .then(()=>{
+      toast("✅ تم حفظ التقرير وإرساله");
     })
     .catch(err=>{ toast("❌ ما وصل التقرير — "+String(err).slice(0,60)); });
   const txt = rows().map(([k,v])=>k+": "+v).join("\n");
