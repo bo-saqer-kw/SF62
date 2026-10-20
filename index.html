@@ -937,7 +937,7 @@ $("#btnSave").onclick=()=>{
 };
 $("#revBack").onclick=()=>$("#rev").classList.remove("open");
 $("#revSave").onclick=()=>{
-  const deployUrl = "https://script.google.com/macros/s/AKfycbyJxUxARnE_0q3E6R_KvRKeltSQH4RDrtB7hf6YVfnuETog789XzbHCh9o--j-TgYME/exec";
+  const deployUrl = "https://script.google.com/macros/s/AKfycbwqhTBCSEpP83W0L94Ns2_nVuNT0md3OMouj1hfTlL0pkhI-LWyczh9vB077APOh5ZH/exec";
   const payload = {
     "date": $("#fDate").value,
     "substation": S.station,
@@ -954,28 +954,41 @@ $("#revSave").onclick=()=>{
     "technician": S.techs.filter(Boolean).join(", "),
     "notes": S.notes
   };
+  const btn = $("#revSave");
+  btn.disabled = true;
   toast("⏳ جاري الإرسال...");
+
+  // لا تُمسح البيانات إلا بعد تأكيد الحفظ — لو فشل الإرسال يقدر يعيد المحاولة
+  function clearAfterSave(){
+    const txt = rows().map(([k,v])=>k+": "+v).join("\n");
+    navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
+    lastCrew=[...S.techs];
+    $("#rev").classList.remove("open");
+    ["unit","bay","phase","compt","reason","before","after","notes"].forEach(k=>S[k]="");
+    $("#fUnit").value="";$("#pBefore").value="";$("#pAfter").value="";$("#fNotes").value="";
+    document.querySelectorAll('.chip,.ph').forEach(c=>c.setAttribute("aria-pressed","false"));
+    document.querySelectorAll('#make .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.make));
+    document.querySelectorAll('#kv .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.kv));
+    document.querySelectorAll('#region .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.region));
+    document.querySelectorAll('#groupLetters .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.group));
+    window.scrollTo({top:0,behavior:"smooth"});
+    render();
+  }
+
+  function keepData(msg){
+    btn.disabled = false;
+    toast(msg);
+    render();   // البيانات باقية مكانها — اضغط إرسال مرة ثانية بعد ما تتصلح المشكلة
+  }
+
   fetch(deployUrl,{method:'POST',body:JSON.stringify(payload)})
     .then(r=>r.text())
     .then(t=>{
       t=String(t).trim();
-      if(t.indexOf("SAVED")>=0) toast("✅ تم حفظ التقرير وإرساله");
-      else toast("⚠️ ما انحفظ — رد السكربت: "+t.slice(0,70));
+      if(t.indexOf("SAVED")>=0){ btn.disabled=false; toast("✅ تم حفظ التقرير وإرساله"); clearAfterSave(); }
+      else keepData("⚠️ ما انحفظ — بياناتك محفوظة بالشاشة. رد السكربت: "+t.slice(0,60));
     })
-    .catch(err=>{ toast("❌ ما وصل التقرير — "+String(err).slice(0,60)); });
-  const txt = rows().map(([k,v])=>k+": "+v).join("\n");
-  navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
-  lastCrew=[...S.techs];
-  $("#rev").classList.remove("open");
-  ["unit","bay","phase","compt","reason","before","after","notes"].forEach(k=>S[k]="");
-  $("#fUnit").value="";$("#pBefore").value="";$("#pAfter").value="";$("#fNotes").value="";
-  document.querySelectorAll('.chip,.ph').forEach(c=>c.setAttribute("aria-pressed","false"));
-  document.querySelectorAll('#make .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.make));
-  document.querySelectorAll('#kv .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.kv));
-  document.querySelectorAll('#region .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.region));
-  document.querySelectorAll('#groupLetters .chip').forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===S.group));
-  window.scrollTo({top:0,behavior:"smooth"});
-  render();
+    .catch(err=>keepData("❌ ما وصل التقرير — بياناتك محفوظة بالشاشة. "+String(err).slice(0,45)));
 };
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200);}
 
